@@ -1,7 +1,5 @@
-import { NAME, ARTISTID, ALBUMID, DURATION } from 'src/constants/constants';
+import { NAME, GRAMMY } from 'src/constants/constants';
 export const artistProperties = {
   NAME,
-  ARTISTID,
-  ALBUMID,
-  DURATION,
+  GRAMMY,
 };
