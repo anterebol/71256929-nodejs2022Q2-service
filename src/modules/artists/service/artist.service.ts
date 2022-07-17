@@ -11,7 +11,7 @@ import { UpdateArtistDto } from '../dto/update-artist.dto';
 @Injectable()
 export class ArtistService {
   getAll() {
-    return db.artists;
+    return db[ARTISTS];
   }
   getById(id: string) {
     checkUuid(id);
