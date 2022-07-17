@@ -1,7 +1,7 @@
 import { ALBUMS } from './../../../constants/constants';
 import { deleteFromFavorites } from 'src/utils/deleteFromFavorites/deleteFromFavorites';
 import { CreateArtistDto } from '../dto/create-artist.dto';
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { db } from 'src/db/db';
 import { checkUuid } from 'src/utils/uuid/uuid';
 import { searchElement } from 'src/utils/search/search';
@@ -45,7 +45,7 @@ export class ArtistService {
       }
       return item;
     });
-    db[TRACKS] = db[ALBUMS].map((item) => {
+    db[ALBUMS] = db[ALBUMS].map((item) => {
       if (item[ARTISTID] === id) {
         item[ARTISTID] = null;
       }

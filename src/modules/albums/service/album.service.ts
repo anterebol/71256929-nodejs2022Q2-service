@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { db } from 'src/db/db';
 import { checkUuid } from 'src/utils/uuid/uuid';
 import { searchElement } from 'src/utils/search/search';
-import { ALBUMS, ARTISTID, TRACKS, ALBUMID } from 'src/constants/constants';
+import { ALBUMS, TRACKS, ALBUMID } from 'src/constants/constants';
 import { updateDb } from 'src/utils/updateDB/updateDb';
 import { albumProperties } from '../interfere/albumInterfere';
 import { deleteFromFavorites } from 'src/utils/deleteFromFavorites/deleteFromFavorites';

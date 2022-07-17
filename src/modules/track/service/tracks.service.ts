@@ -1,10 +1,10 @@
 import { UpdateTrackDto } from './../dto/update-track.dto';
 import { CreateTrackDto } from './../dto/create-track.dto';
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { db } from 'src/db/db';
 import { checkUuid } from 'src/utils/uuid/uuid';
 import { searchElement } from 'src/utils/search/search';
-import { TRACKS, NAME } from 'src/constants/constants';
+import { TRACKS } from 'src/constants/constants';
 import { updateDb } from 'src/utils/updateDB/updateDb';
 import { trackProperties } from '../interfere/trackInterfere';
 import { deleteFromFavorites } from 'src/utils/deleteFromFavorites/deleteFromFavorites';

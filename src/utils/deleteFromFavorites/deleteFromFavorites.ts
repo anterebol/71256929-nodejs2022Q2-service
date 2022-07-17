@@ -14,7 +14,7 @@ export function deleteFromFavorites(prop: string, id: string) {
     db[FAVORITES][prop].splice(i, 1);
     return 'deleted';
   } else if (prop === TRACKS || prop === ALBUMS || prop === ARTISTS) {
-    return 'true';
+    return;
   } else {
     throw new HttpException(NOT_FOUND, 404);
   }

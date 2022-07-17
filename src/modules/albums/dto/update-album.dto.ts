@@ -4,9 +4,9 @@ export class UpdateAlbumDto {
   @IsNotEmpty()
   name: string;
   @IsNumber()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   year: number;
   @IsString()
   @IsOptional()
-  artistId?: string | null;
+  artistId?: string;
 }

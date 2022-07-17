@@ -12,8 +12,12 @@ export function updateDb(
     const i = db[changeProp].findIndex((item) => item.id === id);
     for (const key in keys) {
       const changeKey = keys[key];
-      db[changeProp][i][changeKey] =
-        body[changeKey] || db[changeProp][i][changeKey];
+      if (typeof body[changeKey] !== 'boolean') {
+        db[changeProp][i][changeKey] =
+          body[changeKey] || db[changeProp][i][changeKey];
+      } else {
+        db[changeProp][i][changeKey] = body[changeKey];
+      }
     }
     return db[changeProp][i];
   } else {
