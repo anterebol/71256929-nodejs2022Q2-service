@@ -21,9 +21,6 @@ export class ArtistService {
     return artist;
   }
   createArtist(body: CreateArtistDto) {
-    if (!body.name) {
-      throw new HttpException('Введите имя', 400);
-    }
     return updateDb(
       { id: undefined, changeProp: ARTISTS },
       body,
@@ -38,17 +35,21 @@ export class ArtistService {
   removeArtist(id: string) {
     checkUuid(id);
     searchElement(ARTISTS, id);
-    const i = db[ARTISTS].findIndex((track) => track.id === id);
-    db[ARTISTS].splice(i, 1);
-    db[TRACKS].map((item) => {
+    const currentArtists = [...db[ARTISTS]];
+    const i = currentArtists.findIndex((track) => track.id === id);
+    currentArtists.splice(i, 1);
+    db[ARTISTS] = [...currentArtists];
+    db[TRACKS] = db[TRACKS].map((item) => {
       if (item[ARTISTID] === id) {
         item[ARTISTID] = null;
       }
+      return item;
     });
-    db[ALBUMS].map((item) => {
+    db[TRACKS] = db[ALBUMS].map((item) => {
       if (item[ARTISTID] === id) {
         item[ARTISTID] = null;
       }
+      return item;
     });
     deleteFromFavorites(ARTISTS, id);
     return 'deleted';

@@ -23,13 +23,13 @@ export class UserController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @Header('Content-Type', 'application/json')
-  getArtists() {
+  getUsers() {
     return this.userService.getAll();
   }
   @Get(':id')
   @Header('Content-Type', 'application/json')
   @HttpCode(HttpStatus.OK)
-  getArtist(@Param('id') id: string) {
+  getUser(@Param('id') id: string) {
     return this.userService.getById(id);
   }
   @Post()

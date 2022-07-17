@@ -42,6 +42,7 @@ export class TrackController {
   @Put(':id')
   @Header('Content-Type', 'application/json')
   @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
   updateTrack(@Body() body: UpdateTrackDto, @Param('id') id: string) {
     return this.tracksService.updateTrack(body, id);
   }

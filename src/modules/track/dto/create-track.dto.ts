@@ -12,5 +12,5 @@ export class CreateTrackDto {
   albumId?: string;
   @IsNumber()
   @IsNotEmpty()
-  duration?: number;
+  duration: number;
 }

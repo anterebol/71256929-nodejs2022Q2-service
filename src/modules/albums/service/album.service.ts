@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { db } from 'src/db/db';
 import { checkUuid } from 'src/utils/uuid/uuid';
 import { searchElement } from 'src/utils/search/search';
-import { ALBUMS, ARTISTID, TRACKS } from 'src/constants/constants';
+import { ALBUMS, ARTISTID, TRACKS, ALBUMID } from 'src/constants/constants';
 import { updateDb } from 'src/utils/updateDB/updateDb';
 import { albumProperties } from '../interfere/albumInterfere';
 import { deleteFromFavorites } from 'src/utils/deleteFromFavorites/deleteFromFavorites';
@@ -36,10 +36,11 @@ export class AlbumService {
     searchElement(ALBUMS, id);
     const i = db[ALBUMS].findIndex((album) => album.id === id);
     db[ALBUMS].splice(i, 1);
-    db[TRACKS].forEach((item) => {
-      if (item[ARTISTID] === id) {
-        item[ARTISTID] = null;
+    db[TRACKS] = db[TRACKS].map((item) => {
+      if (item[ALBUMID] === id) {
+        item[ALBUMID] = null;
       }
+      return item;
     });
     deleteFromFavorites(ALBUMS, id);
     return 'deleted';

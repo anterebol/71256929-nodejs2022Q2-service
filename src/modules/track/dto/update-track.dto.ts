@@ -5,12 +5,12 @@ export class UpdateTrackDto {
   @IsNotEmpty()
   name: string;
   @IsString()
-  @IsOptional()
-  artistId?: string | null;
+  @IsNotEmpty()
+  duration: number;
   @IsString()
   @IsOptional()
-  albumId?: string | null;
+  artistId?: string;
   @IsString()
   @IsOptional()
-  duration?: number | null;
+  albumId?: string;
 }

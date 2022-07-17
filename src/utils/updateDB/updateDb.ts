@@ -9,19 +9,21 @@ export function updateDb(
   let { id } = props;
   const { changeProp } = props;
   if (id) {
-    const i = db[changeProp].findIndex((track) => track.id === id);
+    const i = db[changeProp].findIndex((item) => item.id === id);
     for (const key in keys) {
       const changeKey = keys[key];
-      db[changeProp][i][changeKey] = body[changeKey] || null;
+      db[changeProp][i][changeKey] =
+        body[changeKey] || db[changeProp][i][changeKey];
     }
     return db[changeProp][i];
+  } else {
+    id = uuidv4();
+    const item = { id: id };
+    for (const key in keys) {
+      const addKey = keys[key];
+      item[addKey] = body[addKey] || null;
+    }
+    db[changeProp].push(item);
+    return item;
   }
-  id = uuidv4();
-  const track = { id };
-  for (const key in keys) {
-    const addKey = keys[key];
-    track[addKey] = body[addKey] || null;
-  }
-  db.tracks.push(track);
-  return track;
 }

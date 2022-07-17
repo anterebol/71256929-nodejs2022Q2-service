@@ -20,9 +20,6 @@ export class TracksService {
     return track;
   }
   createTrack(body: CreateTrackDto) {
-    if (!body[NAME]) {
-      throw new HttpException('Введит имя', 400);
-    }
     return updateDb(
       { id: undefined, changeProp: TRACKS },
       body,
