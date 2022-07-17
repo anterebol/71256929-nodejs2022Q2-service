@@ -1,3 +1,4 @@
+# Не забудьте после копирования перейти на ветку разработки REST_Service
 # Home Library Service
 
 ## Prerequisites
