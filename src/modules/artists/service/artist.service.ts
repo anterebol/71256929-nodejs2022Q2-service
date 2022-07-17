@@ -1,10 +1,12 @@
+import { ALBUMS } from './../../../constants/constants';
+import { deleteFromFavorites } from 'src/utils/deleteFromFavorites/deleteFromFavorites';
 import { CreateArtistDto } from '../dto/create-artist.dto';
 import { HttpException, Injectable } from '@nestjs/common';
 import { db } from 'src/db/db';
-import { checkUuid } from 'src/uuid/uuid';
-import { searchElement } from 'src/search/search';
-import { ARTISTS } from 'src/constants/constants';
-import { updateDb } from 'src/updateDB/updateDb';
+import { checkUuid } from 'src/utils/uuid/uuid';
+import { searchElement } from 'src/utils/search/search';
+import { ARTISTS, TRACKS, ARTISTID } from 'src/constants/constants';
+import { updateDb } from 'src/utils/updateDB/updateDb';
 import { artistProperties } from '../interfere/artistInterfere';
 import { UpdateArtistDto } from '../dto/update-artist.dto';
 
@@ -20,7 +22,7 @@ export class ArtistService {
   }
   createArtist(body: CreateArtistDto) {
     if (!body.name) {
-      throw new HttpException('Введит имя', 400);
+      throw new HttpException('Введите имя', 400);
     }
     return updateDb(
       { id: undefined, changeProp: ARTISTS },
@@ -38,6 +40,17 @@ export class ArtistService {
     searchElement(ARTISTS, id);
     const i = db[ARTISTS].findIndex((track) => track.id === id);
     db[ARTISTS].splice(i, 1);
+    db[TRACKS].map((item) => {
+      if (item[ARTISTID] === id) {
+        item[ARTISTID] = null;
+      }
+    });
+    db[ALBUMS].map((item) => {
+      if (item[ARTISTID] === id) {
+        item[ARTISTID] = null;
+      }
+    });
+    deleteFromFavorites(ARTISTS, id);
     return 'deleted';
   }
 }

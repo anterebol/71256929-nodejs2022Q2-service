@@ -2,6 +2,10 @@ export const db = {
   albums: [],
   tracks: [],
   artists: [],
-  favorites: [],
   users: [],
+  favorites: {
+    artists: [],
+    albums: [],
+    tracks: [],
+  },
 };

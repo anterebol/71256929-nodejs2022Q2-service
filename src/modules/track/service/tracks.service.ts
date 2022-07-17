@@ -1,11 +1,13 @@
+import { UpdateTrackDto } from './../dto/update-track.dto';
 import { CreateTrackDto } from './../dto/create-track.dto';
 import { HttpException, Injectable } from '@nestjs/common';
 import { db } from 'src/db/db';
-import { checkUuid } from 'src/uuid/uuid';
-import { searchElement } from 'src/search/search';
+import { checkUuid } from 'src/utils/uuid/uuid';
+import { searchElement } from 'src/utils/search/search';
 import { TRACKS, NAME } from 'src/constants/constants';
-import { updateDb } from 'src/updateDB/updateDb';
+import { updateDb } from 'src/utils/updateDB/updateDb';
 import { trackProperties } from '../interfere/trackInterfere';
+import { deleteFromFavorites } from 'src/utils/deleteFromFavorites/deleteFromFavorites';
 
 @Injectable()
 export class TracksService {
@@ -27,7 +29,7 @@ export class TracksService {
       trackProperties,
     );
   }
-  updateTrack(body: CreateTrackDto, id: string) {
+  updateTrack(body: UpdateTrackDto, id: string) {
     checkUuid(id);
     searchElement(TRACKS, id);
     return updateDb({ id, changeProp: TRACKS }, body, trackProperties);
@@ -37,6 +39,7 @@ export class TracksService {
     searchElement(TRACKS, id);
     const i = db[TRACKS].findIndex((track) => track.id === id);
     db[TRACKS].splice(i, 1);
+    deleteFromFavorites(TRACKS, id);
     return 'deleted';
   }
 }

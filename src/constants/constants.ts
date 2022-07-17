@@ -1,6 +1,7 @@
 export const TRACKS = 'tracks';
 export const ARTISTS = 'artists';
 export const USER = 'users';
+export const ALBUMS = 'albums';
 export const NOT_UUID = 'Неверный Id';
 export const NOT_FOUND = 'Данный элемент не найден';
 export const UNCORRECT_OLD_PASSWORD = 'Вы ввели неверный пароль';
@@ -10,3 +11,5 @@ export const TRACKID = 'trackId';
 export const ALBUMID = 'albumId';
 export const DURATION = 'duration';
 export const GRAMMY = 'grammy';
+export const YEAR = 'year';
+export const FAVORITES = 'favorites';

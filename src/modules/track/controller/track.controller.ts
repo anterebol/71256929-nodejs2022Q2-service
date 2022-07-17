@@ -12,6 +12,8 @@ import {
   HttpCode,
   HttpStatus,
   Header,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 
 @Controller('track')
@@ -33,6 +35,7 @@ export class TrackController {
   @Post()
   @Header('Content-Type', 'application/json')
   @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
   addTrack(@Body() body: CreateTrackDto) {
     return this.tracksService.createTrack(body);
   }

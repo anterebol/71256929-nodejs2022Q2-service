@@ -1,8 +1,8 @@
 import { CreateUserDto } from '../dto/create-user.dto';
 import { HttpException, Injectable } from '@nestjs/common';
 import { db } from 'src/db/db';
-import { checkUuid } from 'src/uuid/uuid';
-import { searchElement } from 'src/search/search';
+import { checkUuid } from 'src/utils/uuid/uuid';
+import { searchElement } from 'src/utils/search/search';
 import { USER, UNCORRECT_OLD_PASSWORD } from 'src/constants/constants';
 import { UpdatePasswordDto } from '../dto/update-password.dto';
 import { v4 as uuidv4 } from 'uuid';

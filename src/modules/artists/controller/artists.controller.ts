@@ -12,6 +12,8 @@ import {
   HttpCode,
   HttpStatus,
   Header,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 
 @Controller('artist')
@@ -33,12 +35,14 @@ export class ArtistsController {
   @Post()
   @Header('Content-Type', 'application/json')
   @HttpCode(HttpStatus.CREATED)
+  @UsePipes(new ValidationPipe())
   addArtist(@Body() body: CreateArtistDto) {
     return this.artistService.createArtist(body);
   }
   @Put(':id')
   @Header('Content-Type', 'application/json')
   @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe())
   updateArtist(@Body() body: UpdateArtistDto, @Param('id') id: string) {
     return this.artistService.updateArtist(body, id);
   }
