@@ -1,8 +1,8 @@
 FROM node
 
-WORKDIR /app
+WORKDIR /backend
 
-COPY package.json /app
+COPY package.json /backend
 
 RUN npm install
 
