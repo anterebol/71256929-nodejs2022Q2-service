@@ -19,7 +19,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "exam": "docker build . -t new-image && docker scan new-image"
+    "exam-app": "docker scan 71256929-nodejs2022q2-service_backend",
+    "exam-db": "docker scan 71256929-nodejs2022q2-service_db"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
