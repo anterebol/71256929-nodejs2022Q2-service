@@ -23,33 +23,33 @@ export class UserController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @Header('Content-Type', 'application/json')
-  getUsers() {
-    return this.userService.getAll();
+  async getUsers() {
+    return await this.userService.getAll();
   }
   @Get(':id')
   @Header('Content-Type', 'application/json')
   @HttpCode(HttpStatus.OK)
-  getUser(@Param('id') id: string) {
-    return this.userService.getById(id);
+  async getUser(@Param('id') id: string) {
+    return await this.userService.getById(id);
   }
   @Post()
   @Header('Content-Type', 'application/json')
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe())
-  addUser(@Body() body: CreateUserDto) {
-    return this.userService.createUser(body);
+  async addUser(@Body() body: CreateUserDto) {
+    return await this.userService.createUser(body);
   }
   @Put(':id')
   @Header('Content-Type', 'application/json')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe())
-  updateUser(@Body() body: UpdatePasswordDto, @Param('id') id: string) {
-    return this.userService.updateUser(body, id);
+  async updateUser(@Body() body: UpdatePasswordDto, @Param('id') id: string) {
+    return await this.userService.updateUser(body, id);
   }
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @Header('Content-Type', 'application/json')
-  deleteUser(@Param('id') id: string) {
-    return this.userService.removeUser(id);
+  async deleteUser(@Param('id') id: string) {
+    return await this.userService.removeUser(id);
   }
 }

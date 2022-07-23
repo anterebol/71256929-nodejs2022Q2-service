@@ -1,21 +1,35 @@
-import { UserService } from './modules/user/service/user.service';
 import { Module } from '@nestjs/common';
-import { UserController } from './modules/user/controller/user.controller';
-import { TrackController } from './modules/track/controller/track.controller';
-import { AlbumsController } from './modules/albums/controller/albums.controller';
-import { ArtistsController } from './modules/artists/controller/artists.controller';
-import { TracksService } from './modules/track/service/tracks.service';
-import { ArtistService } from './modules/artists/service/artist.service';
-import { AlbumService } from './modules/albums/service/album.service';
-import { FavoritesModule } from './modules/favorites/module/favorites.module';
+import { UserModule } from './modules/user/module/user.module';
+import { TrackModule } from './modules/track/module/track.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ArtistModule } from './modules/artists/module/artist.module';
+import { AlbumModule } from './modules/albums/module/album.module';
+
 @Module({
-  imports: [FavoritesModule],
-  controllers: [
-    UserController,
-    TrackController,
-    AlbumsController,
-    ArtistsController,
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '../.env' }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config) => ({
+        type: config.get('TYPEORM_CONNECTION'),
+        host: config.get('TYPEORM_HOST'),
+        username: config.get('TYPEORM_USERNAME'),
+        password: config.get('TYPEORM_PASSWORD'),
+        database: config.get('TYPEORM_DATABASE'),
+        port: config.get('TYPEORM_PORT'),
+        entities: [__dirname + 'dist/**/*.entity{.ts,.js}'],
+        synchronize: true,
+        autoLoadEntities: true,
+        logging: true,
+      }),
+    }),
+    UserModule,
+    TrackModule,
+    ArtistModule,
+    AlbumModule,
+    // FavoritesModule,
   ],
-  providers: [TracksService, ArtistService, UserService, AlbumService],
 })
 export class AppModule {}

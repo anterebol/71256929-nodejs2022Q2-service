@@ -1,48 +1,54 @@
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { UpdateAlbumDto } from './../dto/update-album.dto';
 import { CreateAlbumDto } from '../dto/create-album.dto';
-import { Injectable } from '@nestjs/common';
-import { db } from 'src/db/db';
+import { HttpException, Injectable } from '@nestjs/common';
 import { checkUuid } from 'src/utils/uuid/uuid';
-import { searchElement } from 'src/utils/search/search';
-import { ALBUMS, TRACKS, ALBUMID } from 'src/constants/constants';
-import { updateDb } from 'src/utils/updateDB/updateDb';
+import { NOT_FOUND } from 'src/constants/constants';
 import { albumProperties } from '../interfere/albumInterfere';
-import { deleteFromFavorites } from 'src/utils/deleteFromFavorites/deleteFromFavorites';
+import { AlbumEntity } from '../entity/album.entity';
 
 @Injectable()
 export class AlbumService {
-  getAll() {
-    return db[ALBUMS];
+  constructor(
+    @InjectRepository(AlbumEntity)
+    private albumRepository: Repository<AlbumEntity>,
+  ) {}
+  async getAll() {
+    const res = await this.albumRepository.find();
+    return res.map((album) => album.toResponse());
   }
-  getById(id: string) {
+  async getById(id: string) {
     checkUuid(id);
-    const track = searchElement(ALBUMS, id);
-    return track;
+    const album = await this.albumRepository.findOne({ where: { id } });
+    if (album) return album.toResponse();
+    throw new HttpException(NOT_FOUND, 404);
   }
-  createAlbum(body: CreateAlbumDto) {
-    return updateDb(
-      { id: undefined, changeProp: ALBUMS },
-      body,
-      albumProperties,
-    );
+  async createAlbum(body: CreateAlbumDto) {
+    const createdAlbum = this.albumRepository.create(body);
+    return (await this.albumRepository.save(createdAlbum)).toResponse();
   }
-  updateAlbum(body: UpdateAlbumDto, id: string) {
+  async updateAlbum(body: UpdateAlbumDto, id: string) {
     checkUuid(id);
-    searchElement(ALBUMS, id);
-    return updateDb({ id, changeProp: ALBUMS }, body, albumProperties);
-  }
-  removeAlbum(id: string) {
-    checkUuid(id);
-    searchElement(ALBUMS, id);
-    const i = db[ALBUMS].findIndex((album) => album.id === id);
-    db[ALBUMS].splice(i, 1);
-    db[TRACKS] = db[TRACKS].map((item) => {
-      if (item[ALBUMID] === id) {
-        item[ALBUMID] = null;
+    const album = await this.albumRepository.findOne({ where: { id } });
+    if (album) {
+      for (const key in albumProperties) {
+        const changeKey = albumProperties[key];
+        if (typeof body[changeKey] !== 'boolean') {
+          album[changeKey] = body[changeKey] || album[changeKey];
+        } else {
+          album[changeKey] = body[changeKey];
+        }
       }
-      return item;
-    });
-    deleteFromFavorites(ALBUMS, id);
-    return 'deleted';
+      return await this.albumRepository.save(album);
+    }
+    throw new HttpException(NOT_FOUND, 404);
+  }
+  async removeAlbum(id: string) {
+    checkUuid(id);
+    const result = await this.albumRepository.delete(id);
+    if (result.affected === 0) {
+      throw new HttpException(NOT_FOUND, 404);
+    }
   }
 }

@@ -1,77 +1,59 @@
 import { CreateUserDto } from '../dto/create-user.dto';
 import { HttpException, Injectable } from '@nestjs/common';
-import { db } from 'src/db/db';
 import { checkUuid } from 'src/utils/uuid/uuid';
-import { searchElement } from 'src/utils/search/search';
-import { USER, UNCORRECT_OLD_PASSWORD } from 'src/constants/constants';
+import { UNCORRECT_OLD_PASSWORD, NOT_FOUND } from 'src/constants/constants';
 import { UpdatePasswordDto } from '../dto/update-password.dto';
 import { v4 as uuidv4 } from 'uuid';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { UserEntity } from '../entity/user.entity';
 
 @Injectable()
 export class UserService {
-  getAll() {
-    const res = db[USER].map((user) => {
-      const resUser = {};
-      for (const key in user) {
-        if (key !== 'password') {
-          resUser[key] = user[key];
-        }
-      }
-      return resUser;
-    });
-    return res;
+  constructor(
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>,
+  ) {}
+  async getAll() {
+    const res = await this.userRepository.find();
+    return res.map((user) => user.toResponse());
   }
-  getById(id: string) {
+  async getById(id: string) {
     checkUuid(id);
-    const user = searchElement(USER, id);
-    const res = {};
-    for (const key in user) {
-      if (key !== 'password') {
-        res[key] = user[key];
-      }
-    }
-    return res;
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (user) return user.toResponse();
+    throw new HttpException(NOT_FOUND, 404);
   }
-  createUser(body: CreateUserDto) {
+  async createUser(body: CreateUserDto) {
     const { password, login } = body;
-    const res = {
+    const user = {
       id: uuidv4(),
       login,
-      version: 1,
-      createdAt: new Date().getTime(),
-      updatedAt: new Date().getTime(),
-    };
-    const user = {
       password,
-      ...res,
+      version: 1,
+      createdAt: new Date().getTime().toString(),
+      updatedAt: new Date().getTime().toString(),
     };
-    db[USER].push(user);
-    return res;
+    const createdUser = this.userRepository.create(user);
+    return (await this.userRepository.save(createdUser)).toResponse();
   }
-  updateUser(body: UpdatePasswordDto, id: string) {
+  async updateUser(body: UpdatePasswordDto, id: string) {
     checkUuid(id);
-    searchElement(USER, id);
+    const user = await this.userRepository.findOne({ where: { id } });
     const { oldPassword, newPassword } = body;
-    const index = db[USER].findIndex((user) => user.id === id);
-    if (db[USER][index].password === oldPassword) {
-      db[USER][index].version = db[USER][index].version + 1;
-      db[USER][index].password = newPassword;
-      db[USER][index].updatedAt = new Date().getTime();
-      const res = {};
-      for (const key in db[USER][index]) {
-        if (key !== 'password') {
-          res[key] = db[USER][index][key];
-        }
-      }
-      return res;
+    if (user.password === oldPassword) {
+      user.version = user.version + 1;
+      user.password = newPassword;
+      user.updatedAt = new Date().getTime().toString();
+      return await this.userRepository.save(user);
     }
     throw new HttpException(UNCORRECT_OLD_PASSWORD, 403);
   }
-  removeUser(id: string) {
+  async removeUser(id: string) {
     checkUuid(id);
-    searchElement(USER, id);
-    const i = db[USER].findIndex((user) => user.id === id);
-    db[USER].splice(i, 1);
-    return 'deleted';
+    const result = await this.userRepository.delete(id);
+    if (result.affected === 0) {
+      throw new HttpException(NOT_FOUND, 404);
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { TracksService } from './../service/tracks.service';
+import { TrackService } from '../service/track.service';
 import { UpdateTrackDto } from '../dto/update-track.dto';
 import { CreateTrackDto } from '../dto/create-track.dto';
 import {
@@ -18,7 +18,7 @@ import {
 
 @Controller('track')
 export class TrackController {
-  constructor(private readonly tracksService: TracksService) {}
+  constructor(private readonly tracksService: TrackService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)

@@ -1,57 +1,54 @@
-import { ALBUMS } from './../../../constants/constants';
-import { deleteFromFavorites } from 'src/utils/deleteFromFavorites/deleteFromFavorites';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { NOT_FOUND } from './../../../constants/constants';
 import { CreateArtistDto } from '../dto/create-artist.dto';
-import { Injectable } from '@nestjs/common';
-import { db } from 'src/db/db';
+import { HttpException, Injectable } from '@nestjs/common';
 import { checkUuid } from 'src/utils/uuid/uuid';
-import { searchElement } from 'src/utils/search/search';
-import { ARTISTS, TRACKS, ARTISTID } from 'src/constants/constants';
-import { updateDb } from 'src/utils/updateDB/updateDb';
 import { artistProperties } from '../interfere/artistInterfere';
 import { UpdateArtistDto } from '../dto/update-artist.dto';
+import { ArtistEntity } from '../entity/artist.entity';
 
 @Injectable()
 export class ArtistService {
-  getAll() {
-    return db[ARTISTS];
+  constructor(
+    @InjectRepository(ArtistEntity)
+    private artistRepository: Repository<ArtistEntity>,
+  ) {}
+  async getAll() {
+    const res = await this.artistRepository.find();
+    return res.map((artist) => artist.toResponse());
   }
-  getById(id: string) {
+  async getById(id: string) {
     checkUuid(id);
-    const artist = searchElement(ARTISTS, id);
-    return artist;
+    const artist = await this.artistRepository.findOne({ where: { id } });
+    if (artist) return artist.toResponse();
+    throw new HttpException(NOT_FOUND, 404);
   }
-  createArtist(body: CreateArtistDto) {
-    return updateDb(
-      { id: undefined, changeProp: ARTISTS },
-      body,
-      artistProperties,
-    );
+  async createArtist(body: CreateArtistDto) {
+    const createdTrack = this.artistRepository.create(body);
+    return (await this.artistRepository.save(createdTrack)).toResponse();
   }
-  updateArtist(body: UpdateArtistDto, id: string) {
+  async updateArtist(body: UpdateArtistDto, id: string) {
     checkUuid(id);
-    searchElement(ARTISTS, id);
-    return updateDb({ id, changeProp: ARTISTS }, body, artistProperties);
-  }
-  removeArtist(id: string) {
-    checkUuid(id);
-    searchElement(ARTISTS, id);
-    const currentArtists = [...db[ARTISTS]];
-    const i = currentArtists.findIndex((track) => track.id === id);
-    currentArtists.splice(i, 1);
-    db[ARTISTS] = [...currentArtists];
-    db[TRACKS] = db[TRACKS].map((item) => {
-      if (item[ARTISTID] === id) {
-        item[ARTISTID] = null;
+    const track = await this.artistRepository.findOne({ where: { id } });
+    if (track) {
+      for (const key in artistProperties) {
+        const changeKey = artistProperties[key];
+        if (typeof body[changeKey] !== 'boolean') {
+          track[changeKey] = body[changeKey] || track[changeKey];
+        } else {
+          track[changeKey] = body[changeKey];
+        }
       }
-      return item;
-    });
-    db[ALBUMS] = db[ALBUMS].map((item) => {
-      if (item[ARTISTID] === id) {
-        item[ARTISTID] = null;
-      }
-      return item;
-    });
-    deleteFromFavorites(ARTISTS, id);
-    return 'deleted';
+      return await this.artistRepository.save(track);
+    }
+    throw new HttpException(NOT_FOUND, 404);
+  }
+  async removeArtist(id: string) {
+    checkUuid(id);
+    const result = await this.artistRepository.delete(id);
+    if (result.affected === 0) {
+      throw new HttpException(NOT_FOUND, 404);
+    }
   }
 }

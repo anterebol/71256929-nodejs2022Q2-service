@@ -31,3 +31,13 @@ export function updateDb(
     return item;
   }
 }
+
+export const createItemDB = (body, keys) => {
+  const id = uuidv4();
+  const item = { id: id };
+  for (const key in keys) {
+    const addKey = keys[key];
+    item[addKey] = body[addKey] || null;
+  }
+  return item;
+};
