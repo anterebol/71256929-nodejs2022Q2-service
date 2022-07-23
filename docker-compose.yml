@@ -1,23 +1,37 @@
 version: '3.8'
 
 services:
-  # db: 
-  #   container_name: postgres
-  #   image: postrgres:16-alpine
-  #   restart: always
-  #   environment:
-  #     - POSTGRES_USER=${TYPEORM_USERNAME}
-  #     - POSTGRES_PASSWORD=${TYPEORM_PASSWORD}
-  #     - POSTGRES_DB=${TYPEORM_DATABASE}
-  #   volumes:
-  #     - ./pgdata:/var/lib/postgresql/data
-  #   ports:
-  #     - ${TYPEORM_PORT}:${TYPEORM_PORT}
   backend:
     container_name: backend
-    image: postrgres:16-alpine
-    build: ./backend
-    restart: always
+    # image: new-image
+    depends_on:
+      - db
+    build: .
+    env_file: .env
+    environment:
+      PORT: ${PORT}
     ports:
-      -  4000:4000
+      - ${PORT}:${PORT}
+    command: npm run start:dev
+    restart: unless-stopped
+    networks:
+      - anterebol
+  db: 
+    container_name: db
+    build: ./database
+    # image: postrgres:14.4-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${TYPEORM_USERNAME}
+      - POSTGRES_PASSWORD=${TYPEORM_PASSWORD}
+      - POSTGRES_DB=${TYPEORM_DATABASE}
+    # PGDATA: /var/lib/postgresql/data
+    volumes:
+      - ./pgdata:/data
+    ports:
+      - ${TYPEORM_PORT}:${TYPEORM_PORT}
+    networks:
+      - anterebol
     
+networks:
+  anterebol:

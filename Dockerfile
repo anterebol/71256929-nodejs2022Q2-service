@@ -1,4 +1,4 @@
-FROM node
+FROM node:16.15.1-alpine
 
 WORKDIR /backend
 
@@ -8,8 +8,6 @@ RUN npm install
 
 COPY . .
 
-ENV PORT=4000
+EXPOSE ${PORT}
 
-EXPOSE $PORT
-
-CMD ["npm", "run", "start"]
+# CMD ["npm", "run", "start"]
