@@ -8,7 +8,7 @@ export class FavoritesController {
   @Get()
   @Header('Content-Type', 'application/json')
   @HttpCode(HttpStatus.OK)
-  getAll() {
-    return this.favoritesService.getAll();
+  async getAll() {
+    return await this.favoritesService.getAll();
   }
 }

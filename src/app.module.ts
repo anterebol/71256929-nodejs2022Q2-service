@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArtistModule } from './modules/artists/module/artist.module';
 import { AlbumModule } from './modules/albums/module/album.module';
+import { FavoritesModule } from './modules/favorites/module/favorites.module';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { AlbumModule } from './modules/albums/module/album.module';
     TrackModule,
     ArtistModule,
     AlbumModule,
-    // FavoritesModule,
+    FavoritesModule,
   ],
 })
 export class AppModule {}

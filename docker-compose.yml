@@ -5,7 +5,7 @@ services:
     container_name: data-db
     build: ./database
     # image: postrgres:14.4-alpine
-    restart: unless-stopped
+    restart: always
     env_file: .env
     environment:
       - POSTGRES_USER=${TYPEORM_USERNAME}
@@ -36,7 +36,7 @@ services:
     ports:
       - ${PORT}:${PORT}
     command: npm run start
-    restart: unless-stopped
+    restart: always
     networks:
       - anterebol
     

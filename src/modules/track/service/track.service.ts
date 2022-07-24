@@ -7,7 +7,6 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { checkUuid } from 'src/utils/uuid/uuid';
 import { NOT_FOUND } from 'src/constants/constants';
 import { trackProperties } from '../interfere/trackInterfere';
-import { deleteFromFavorites } from 'src/utils/deleteFromFavorites/deleteFromFavorites';
 import { TrackEntity } from '../entity/track.entity';
 
 @Injectable()
