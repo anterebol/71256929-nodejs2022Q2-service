@@ -80,26 +80,28 @@ export class FavoritesService {
     checkUuid(id);
     switch (prop) {
       case ALBUMS:
-        const album = await this.albumRepository.findOne({ where: { id } });
+        const album = await this.albumRepository.findOne({ where: { id: id } });
         if (album) {
-          await this.favoriteAlbumRepository.save({ id });
+          await this.favoriteAlbumRepository.save({ id: id });
           return album;
         }
-        throw new HttpException(NOT_FOUND, 404);
+        throw new HttpException(NOT_FOUND, 422);
       case ARTISTS:
-        const artist = await this.artistRepository.findOne({ where: { id } });
+        const artist = await this.artistRepository.findOne({
+          where: { id: id },
+        });
         if (artist) {
-          await this.favoriteArtistRepository.save({ id });
+          await this.favoriteArtistRepository.save({ id: id });
           return artist;
         }
-        throw new HttpException(NOT_FOUND, 404);
+        throw new HttpException(NOT_FOUND, 422);
       case TRACKS:
         const track = await this.trackRepository.findOne({ where: { id } });
         if (track) {
-          await this.favoriteTrackRepository.save({ id });
+          await this.favoriteTrackRepository.save({ id: id });
           return track;
         }
-        throw new HttpException(NOT_FOUND, 404);
+        throw new HttpException(NOT_FOUND, 422);
     }
   }
   async removeFromFavorites(id, prop: string) {

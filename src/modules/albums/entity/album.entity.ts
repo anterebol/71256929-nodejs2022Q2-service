@@ -1,4 +1,10 @@
-import { PrimaryGeneratedColumn, Entity, Column } from 'typeorm';
+import {
+  PrimaryGeneratedColumn,
+  Entity,
+  Column,
+  JoinColumn,
+  OneToOne,
+} from 'typeorm';
 
 @Entity('album')
 export class AlbumEntity {
@@ -11,7 +17,9 @@ export class AlbumEntity {
   @Column()
   year: number;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   artistId: string | null;
 
   toResponse() {

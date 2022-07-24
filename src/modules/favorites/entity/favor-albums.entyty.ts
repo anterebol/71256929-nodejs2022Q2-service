@@ -1,7 +1,7 @@
-import { PrimaryGeneratedColumn, Entity } from 'typeorm';
+import { PrimaryColumn, Entity } from 'typeorm';
 
 @Entity('favs/album')
 export class FavoriteAlbumsEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn()
   id: string;
 }
