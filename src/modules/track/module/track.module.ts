@@ -1,0 +1,14 @@
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { TrackEntity } from '../entity/track.entity';
+import { Module } from '@nestjs/common';
+import { TrackController } from '../controller/track.controller';
+import { TrackService } from '../service/track.service';
+import { AlbumEntity } from 'src/modules/albums/entity/album.entity';
+import { ArtistEntity } from 'src/modules/artists/entity/artist.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([TrackEntity, AlbumEntity, ArtistEntity])],
+  controllers: [TrackController],
+  providers: [TrackService],
+})
+export class TrackModule {}
