@@ -24,6 +24,10 @@ export class UserService {
     if (user) return user.toResponse();
     throw new HttpException(NOT_FOUND, 404);
   }
+  async getUserByEmail(login: string) {
+    const user = this.userRepository.findOne({ where: { login } });
+    return user;
+  }
   async createUser(body: CreateUserDto) {
     const { password, login } = body;
     const id = uuidv4();

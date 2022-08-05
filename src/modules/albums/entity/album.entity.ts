@@ -1,10 +1,4 @@
-import {
-  PrimaryGeneratedColumn,
-  Entity,
-  Column,
-  JoinColumn,
-  OneToOne,
-} from 'typeorm';
+import { PrimaryGeneratedColumn, Entity, Column } from 'typeorm';
 
 @Entity('album')
 export class AlbumEntity {

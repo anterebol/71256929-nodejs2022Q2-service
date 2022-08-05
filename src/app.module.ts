@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArtistModule } from './modules/artists/module/artist.module';
 import { AlbumModule } from './modules/albums/module/album.module';
 import { FavoritesModule } from './modules/favorites/module/favorites.module';
+import { AuthModule } from './modules/auth/module/auth.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { FavoritesModule } from './modules/favorites/module/favorites.module';
     ArtistModule,
     AlbumModule,
     FavoritesModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
