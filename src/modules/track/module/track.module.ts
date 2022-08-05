@@ -1,4 +1,3 @@
-import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TrackEntity } from '../entity/track.entity';
 import { Module, forwardRef } from '@nestjs/common';

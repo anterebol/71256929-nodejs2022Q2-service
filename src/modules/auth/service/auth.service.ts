@@ -1,11 +1,7 @@
-import { validate } from 'uuid';
 import { UserService } from './../../user/service/user.service';
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { CreateUserDto } from 'src/modules/user/dto/create-user.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { UserEntity } from 'src/modules/user/entity/user.entity';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -19,13 +15,6 @@ export class AuthService {
     return this.generateToken(user);
   }
   async signup(authDto: CreateUserDto) {
-    const candidat = await this.userService.getUserByEmail(authDto.login);
-    if (candidat) {
-      throw new HttpException(
-        'Пользователь уже существует',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
     const hashPassword = await bcrypt.hash(
       authDto.password,
       Number(process.env.CRYPT_SALT),
@@ -42,7 +31,7 @@ export class AuthService {
   private generateToken(user) {
     const payload = { login: user.login, userId: user.id };
     return {
-      token: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload),
     };
   }
   private async validateUser(authDto) {
