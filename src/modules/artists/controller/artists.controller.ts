@@ -1,3 +1,4 @@
+import { JwtAuthGuard } from './../../auth/authGuard/auth.guard';
 import { ArtistService } from './../service/artist.service';
 import { UpdateArtistDto } from '../dto/update-artist.dto';
 import { CreateArtistDto } from '../dto/create-artist.dto';
@@ -14,9 +15,11 @@ import {
   Header,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 
 @Controller('artist')
+@UseGuards(JwtAuthGuard)
 export class ArtistsController {
   constructor(private readonly artistService: ArtistService) {}
 

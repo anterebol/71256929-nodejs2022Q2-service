@@ -20,5 +20,6 @@ import { UserEntity } from 'src/modules/user/entity/user.entity';
       },
     }),
   ],
+  exports: [AuthService, JwtModule],
 })
 export class AuthModule {}

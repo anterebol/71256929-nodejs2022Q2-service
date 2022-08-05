@@ -14,9 +14,12 @@ import {
   Header,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/modules/auth/authGuard/auth.guard';
 
 @Controller('track')
+@UseGuards(JwtAuthGuard)
 export class TrackController {
   constructor(private readonly tracksService: TrackService) {}
 

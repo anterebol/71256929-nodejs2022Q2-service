@@ -1,3 +1,4 @@
+import { JwtAuthGuard } from './../../auth/authGuard/auth.guard';
 import { AlbumService } from '../service/album.service';
 import { UpdateAlbumDto } from '../dto/update-album.dto';
 import { CreateAlbumDto } from '../dto/create-album.dto';
@@ -14,9 +15,11 @@ import {
   Header,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 
 @Controller('album')
+@UseGuards(JwtAuthGuard)
 export class AlbumsController {
   constructor(private readonly albumService: AlbumService) {}
 

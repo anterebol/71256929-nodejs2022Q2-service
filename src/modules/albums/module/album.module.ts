@@ -1,11 +1,12 @@
 import { TrackEntity } from 'src/modules/track/entity/track.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AlbumEntity } from '../entity/album.entity';
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { AlbumsController } from '../controller/album.controller';
 import { AlbumService } from '../service/album.service';
 import { ArtistEntity } from 'src/modules/artists/entity/artist.entity';
 import { FavoriteAlbumsEntity } from 'src/modules/favorites/entity/favor-albums.entyty';
+import { AuthModule } from 'src/modules/auth/module/auth.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { FavoriteAlbumsEntity } from 'src/modules/favorites/entity/favor-albums.
       TrackEntity,
       FavoriteAlbumsEntity,
     ]),
+    forwardRef(() => AuthModule),
   ],
   controllers: [AlbumsController],
   providers: [AlbumService],

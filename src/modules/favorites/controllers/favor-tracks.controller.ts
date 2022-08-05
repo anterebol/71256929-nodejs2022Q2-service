@@ -8,9 +8,12 @@ import {
   Header,
   HttpStatus,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/modules/auth/authGuard/auth.guard';
 
 @Controller('favs/track')
+@UseGuards(JwtAuthGuard)
 export class FavorTrackController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
