@@ -16,7 +16,8 @@ export class UserService {
   ) {}
   async getAll() {
     const res = await this.userRepository.find();
-    return res.map((user) => user.toResponse());
+    // return res.map((user) => user.toResponse());
+    return res;
   }
   async getById(id: string) {
     checkUuid(id);
