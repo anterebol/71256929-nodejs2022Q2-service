@@ -15,13 +15,6 @@ export class JwtAuthGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const req = context.switchToHttp().getRequest();
-    console.log(
-      '----------------------------------------------',
-      req.Body,
-      req.Header,
-      req.headers,
-      '----------------------------------------------',
-    );
     try {
       const authHeader = req.headers.authorization;
       const bearer = authHeader.split(' ')[0];
@@ -35,6 +28,5 @@ export class JwtAuthGuard implements CanActivate {
     } catch {
       throw new UnauthorizedException('user is not logged in');
     }
-    return true;
   }
 }
