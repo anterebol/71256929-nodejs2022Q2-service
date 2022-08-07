@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  db: 
+    container_name: data-db
+    build: ./database
+    # image: postrgres:14.4-alpine
+    restart: on-failure
+    env_file: .env
+    environment:
+      - POSTGRES_USER=${TYPEORM_USERNAME}
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=${TYPEORM_DATABASE}
+    # PGDATA: /var/lib/postgresql/data
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - ${TYPEORM_PORT}:${TYPEORM_PORT}
+    networks:
+      - anterebol
+  backend:
+    container_name: backend
+    # image: new-image
+    depends_on:
+      - db
+    build: .
+    # env_file: .env
+    environment:
+      - PORT=${PORT}
+      - TYPEORM_CONNECTION=${TYPEORM_CONNECTION}
+      - TYPEORM_USERNAME=${TYPEORM_USERNAME}
+      - TYPEORM_PASSWORD=123456
+      - TYPEORM_DATABASE=${TYPEORM_DATABASE}
+      - TYPEORM_PORT=${TYPEORM_PORT}
+      - TYPEORM_HOST=db
+      - CRYPT_SALT=${CRYPT_SALT}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_SECRET_REFRESH_KEY=${JWT_SECRET_REFRESH_KEY}
+      - TOKEN_EXPIRE_TIME=${TOKEN_EXPIRE_TIME}
+      - TOKEN_REFRESH_EXPIRE_TIME=${TOKEN_REFRESH_EXPIRE_TIME}
+    ports:
+      - ${PORT}:${PORT}
+    command: npm run start
+    restart: on-failure
+    networks:
+      - anterebol
+    
+networks:
+  anterebol:
